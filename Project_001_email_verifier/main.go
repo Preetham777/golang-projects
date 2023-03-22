@@ -21,7 +21,7 @@ import (
 */
 
 var (
-	tableTitle                = "Email Validator"
+	tableTitle                = "Email Verifier"
 	colTitleIndex             = "#"
 	colTitleValidationType    = "Validation Type"
 	colTitleResult            = "Result"
@@ -52,11 +52,11 @@ func checkEmailValidity(ipMail *string) bool {
 
 	if err != nil {
 		fmt.Printf("ERROR : Invalid email :  %v\n", *ipMail)
-		tableRows = append(tableRows, table.Row{1, "Email Validity", "ERROR", err})
+		tableRows = append(tableRows, table.Row{1, "Valid Email", "ERROR", err})
 		return false
 	} else {
 		fmt.Printf("SUCCESS : Address is in valid format %v\n", isEmailValid)
-		tableRows = append(tableRows, table.Row{1, "Email Validity", "SUCCESS", ""})
+		tableRows = append(tableRows, table.Row{1, "Valid Email", "SUCCESS", ""})
 		return true
 	}
 
