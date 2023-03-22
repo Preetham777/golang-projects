@@ -8,11 +8,11 @@
 
 ## Current Abilities
 
-[x] validate email address
-[x] verify the DNS using DNSTXT records
-[x] verify the DNS MX records
-[ ] verify the smtp
-[ ] verify the DEA (disposable email address) 
+- [x] validate email address
+- [x] verify the DNS using DNSTXT records
+- [x] verify the DNS MX records
+- [ ] verify the smtp
+- [ ] verify the DEA (disposable email address) 
 
 ## Example Ouputs
 
