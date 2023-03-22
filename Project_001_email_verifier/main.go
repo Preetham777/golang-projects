@@ -5,6 +5,9 @@ import (
 	"net"
 	netMail "net/mail"
 	"strings"
+
+	// Additonal imports
+	"github.com/jedib0t/go-pretty/v6/table"
 )
 
 /*
@@ -12,10 +15,27 @@ import (
 2. Loop through the email address
 3. Check if its valid email address format
 4. Check TXT records of the domain to identify authorised server
-4. If valid check for the DMX record lookup
-5. If it has then its valid
+5. Check MX record lookup of the domain
+6. If it has then its valid
 
 */
+
+var (
+	tableTitle                = "Email Validator"
+	colTitleIndex             = "#"
+	colTitleValidationType    = "Validation Type"
+	colTitleResult            = "Result"
+	colTitleResultDescription = "Result Description"
+	rowHeader                 = table.Row{colTitleIndex,
+		colTitleValidationType,
+		colTitleResult,
+		colTitleResultDescription,
+	}
+
+	tableRows = []table.Row{}
+
+	BULK_EMAIL_COUNT = 2
+)
 
 func getInputEmails() string {
 	fmt.Printf("Enter email address\n")
@@ -32,9 +52,11 @@ func checkEmailValidity(ipMail *string) bool {
 
 	if err != nil {
 		fmt.Printf("ERROR : Invalid email :  %v\n", *ipMail)
+		tableRows = append(tableRows, table.Row{1, "Email Validity", "ERROR", err})
 		return false
 	} else {
 		fmt.Printf("SUCCESS : Address is in valid format %v\n", isEmailValid)
+		tableRows = append(tableRows, table.Row{1, "Email Validity", "SUCCESS", ""})
 		return true
 	}
 
@@ -45,18 +67,51 @@ func getDnsTxtRecords(ipMail *string) {
 	domainName := strings.Split(*ipMail, "@")[1]
 
 	if dnsTxtRecords, err := net.LookupTXT(domainName); err != nil {
+		tableRows = append(tableRows, table.Row{2, "DNS TXT Records", "ERROR", err})
 		fmt.Printf("ERROR: Seems there are no DNS txt records for email : %v with error %v\n", *ipMail, err)
 	} else {
 		fmt.Printf("SUCCESS:  here are the dns txt records %v\n", dnsTxtRecords)
+		tableRows = append(tableRows, table.Row{2, "DNS TXT Records", "SUCCESS", dnsTxtRecords[1]})
 	}
 
+}
+
+func getMxRecords(ipmail *string) {
+	domainName := strings.Split(*ipmail, "@")[1]
+
+	if mxRecords, err := net.LookupMX(domainName); err != nil {
+		fmt.Printf("ERROR : MX records not found for email %v  with error %v\n", *ipmail, err)
+		tableRows = append(tableRows, table.Row{3, "MX TXT Records", "ERROR", err})
+	} else {
+		fmt.Printf("INFO : MX recods found for email %v are %v\n", *ipmail, mxRecords)
+		tableRows = append(tableRows, table.Row{3, "MX TXT Records", "SUCCESS", mxRecords})
+	}
+}
+
+func renderTable(ipMail string) {
+	tw := table.NewWriter()
+	tw.SetTitle(tableTitle + " : " + ipMail)
+	tw.AppendHeader(rowHeader)
+	tw.AppendRows(tableRows)
+	tw.AppendSeparator()
+	tableRows = []table.Row{}
+	fmt.Println(tw.Render())
 }
 
 func main() {
 
 	inputEmail := getInputEmails()
+	maxEmail := BULK_EMAIL_COUNT
 
-	checkEmailValidity(&inputEmail)
-	getDnsTxtRecords(&inputEmail)
+	for (maxEmail > 0) && (len(inputEmail) != 0) {
+		checkEmailValidity(&inputEmail)
+		getDnsTxtRecords(&inputEmail)
+		getMxRecords(&inputEmail)
+
+		renderTable(inputEmail)
+
+		inputEmail = getInputEmails()
+	}
+	maxEmail -= 1
 
 }
