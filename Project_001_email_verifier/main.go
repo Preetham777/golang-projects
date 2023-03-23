@@ -34,7 +34,7 @@ var (
 
 	tableRows = []table.Row{}
 
-	BULK_EMAIL_COUNT = 2
+	BULK_EMAIL_COUNT = 1
 )
 
 func getInputEmails() string {
@@ -88,6 +88,18 @@ func getMxRecords(ipmail *string) {
 	}
 }
 
+func checkEmailDispoableOrNot(inputEmail *string) {
+	inputEmailDomainName := strings.Split(*inputEmail, "@")[1]
+
+	for _, mailDomain := range disposableEmailsList {
+		if mailDomain == inputEmailDomainName {
+			tableRows = append(tableRows, table.Row{4, "Non Disposable Email", "ERROR", "email is disposable"})
+			return
+		}
+	}
+	tableRows = append(tableRows, table.Row{4, "Non Disposable Email", "SUCCESS", "email is NOT disposable"})
+}
+
 func renderTable(ipMail string) {
 	tw := table.NewWriter()
 	tw.SetTitle(tableTitle + " : " + ipMail)
@@ -100,18 +112,30 @@ func renderTable(ipMail string) {
 
 func main() {
 
-	inputEmail := getInputEmails()
-	maxEmail := BULK_EMAIL_COUNT
+	inputEmail := "sample_mail@gmail.com"
+	maxBulkEmailCountReached := 0
 
-	for (maxEmail > 0) && (len(inputEmail) != 0) {
-		checkEmailValidity(&inputEmail)
+	getUpdatedDisposableEmails()
+
+	for len(inputEmail) != 0 {
+		inputEmail = getInputEmails()
+
+		if !checkEmailValidity(&inputEmail) {
+			continue
+		}
+
 		getDnsTxtRecords(&inputEmail)
 		getMxRecords(&inputEmail)
+		checkEmailDispoableOrNot(&inputEmail)
 
 		renderTable(inputEmail)
 
-		inputEmail = getInputEmails()
+		maxBulkEmailCountReached += 1
+
+		if maxBulkEmailCountReached == BULK_EMAIL_COUNT {
+			break
+		}
+
 	}
-	maxEmail -= 1
 
 }
