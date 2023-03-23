@@ -11,8 +11,8 @@
 - [x] validate email address
 - [x] verify the DNS using DNSTXT records
 - [x] verify the DNS MX records
+- [x] verify the DEA (disposable email address) 
 - [ ] verify the smtp
-- [ ] verify the DEA (disposable email address) 
 
 ## Example Ouputs
 
