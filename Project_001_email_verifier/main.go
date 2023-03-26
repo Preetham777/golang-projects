@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	netMail "net/mail"
+	"net/smtp"
 	"strings"
 
 	// Additonal imports
@@ -34,7 +35,7 @@ var (
 
 	tableRows = []table.Row{}
 
-	BULK_EMAIL_COUNT = 1
+	BULK_EMAIL_COUNT = 5
 )
 
 func getInputEmails() string {
@@ -110,6 +111,41 @@ func renderTable(ipMail string) {
 	fmt.Println(tw.Render())
 }
 
+func verifySMTPConnectivity(ipMail *string) {
+
+	domainName := strings.Split(*ipMail, "@")[1]
+	emailHostName := strings.Split(*ipMail, "@")[0]
+	newSmptConn, err := net.Dial("tcp", domainName+":25")
+
+	if isError("dialing tcp to domain", err) {
+		return
+	}
+
+	newSmtpClient, err := smtp.NewClient(newSmptConn, emailHostName)
+
+	if isError("creating new SMTP client", err) {
+		return
+	}
+
+	isSmtpValid := newSmtpClient.Verify(domainName)
+
+	if isSmtpValid == nil {
+		//valid
+		tableRows = append(tableRows, table.Row{5, "SMTP Verified", "SUCCESS", "SMTP Verification done"})
+	} else {
+		tableRows = append(tableRows, table.Row{5, "SMTP Verified", "ERROR", isSmtpValid})
+	}
+
+}
+
+func isError(errorAt string, e error) bool {
+	if e != nil {
+		fmt.Printf("ERROR: at %v with the error %v\n", errorAt, e)
+		return true
+	}
+	return false
+}
+
 func main() {
 
 	inputEmail := "sample_mail@gmail.com"
@@ -127,6 +163,7 @@ func main() {
 		getDnsTxtRecords(&inputEmail)
 		getMxRecords(&inputEmail)
 		checkEmailDispoableOrNot(&inputEmail)
+		verifySMTPConnectivity(&inputEmail)
 
 		renderTable(inputEmail)
 

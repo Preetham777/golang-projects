@@ -12,7 +12,9 @@
 - [x] verify the DNS using DNSTXT records
 - [x] verify the DNS MX records
 - [x] verify the DEA (disposable email address) 
-- [ ] verify the smtp
+- [x] verify the smtp**
+
+** may not work as expected and can often lead to error
 
 ## Example Ouputs
 
