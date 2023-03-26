@@ -85,6 +85,9 @@ func getMxRecords(ipmail *string) {
 		tableRows = append(tableRows, table.Row{3, "MX TXT Records", "ERROR", err})
 	} else {
 		fmt.Printf("INFO : MX recods found for email %v are %v\n", *ipmail, mxRecords)
+		for i, mxHosts := range mxRecords {
+			fmt.Printf("MX record%d Host: %v\n", i, mxHosts.Host)
+		}
 		tableRows = append(tableRows, table.Row{3, "MX TXT Records", "SUCCESS", mxRecords})
 	}
 }
@@ -101,29 +104,23 @@ func checkEmailDispoableOrNot(inputEmail *string) {
 	tableRows = append(tableRows, table.Row{4, "Non Disposable Email", "SUCCESS", "email is NOT disposable"})
 }
 
-func renderTable(ipMail string) {
-	tw := table.NewWriter()
-	tw.SetTitle(tableTitle + " : " + ipMail)
-	tw.AppendHeader(rowHeader)
-	tw.AppendRows(tableRows)
-	tw.AppendSeparator()
-	tableRows = []table.Row{}
-	fmt.Println(tw.Render())
-}
-
 func verifySMTPConnectivity(ipMail *string) {
 
 	domainName := strings.Split(*ipMail, "@")[1]
+	smtpPort := "25"
+
 	emailHostName := strings.Split(*ipMail, "@")[0]
-	newSmptConn, err := net.Dial("tcp", domainName+":25")
+	newSmptConn, err := net.Dial("tcp", domainName+":"+smtpPort)
 
 	if isError("dialing tcp to domain", err) {
+		tableRows = append(tableRows, table.Row{5, "SMTP Verification", "ERROR", err})
 		return
 	}
 
 	newSmtpClient, err := smtp.NewClient(newSmptConn, emailHostName)
 
 	if isError("creating new SMTP client", err) {
+		tableRows = append(tableRows, table.Row{5, "SMTP Verification", "ERROR", err})
 		return
 	}
 
@@ -131,9 +128,9 @@ func verifySMTPConnectivity(ipMail *string) {
 
 	if isSmtpValid == nil {
 		//valid
-		tableRows = append(tableRows, table.Row{5, "SMTP Verified", "SUCCESS", "SMTP Verification done"})
+		tableRows = append(tableRows, table.Row{5, "SMTP Verification", "SUCCESS", "SMTP Verification done"})
 	} else {
-		tableRows = append(tableRows, table.Row{5, "SMTP Verified", "ERROR", isSmtpValid})
+		tableRows = append(tableRows, table.Row{5, "SMTP Verification", "ERROR", isSmtpValid})
 	}
 
 }
@@ -144,6 +141,16 @@ func isError(errorAt string, e error) bool {
 		return true
 	}
 	return false
+}
+
+func renderTable(ipMail string) {
+	tw := table.NewWriter()
+	tw.SetTitle(tableTitle + " : " + ipMail)
+	tw.AppendHeader(rowHeader)
+	tw.AppendRows(tableRows)
+	tw.AppendSeparator()
+	tableRows = []table.Row{}
+	fmt.Println(tw.Render())
 }
 
 func main() {
