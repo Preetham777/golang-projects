@@ -11,9 +11,10 @@
 - [x] validate email address
 - [x] verify the DNS using DNSTXT records
 - [x] verify the DNS MX records
-- [x] verify the DEA (disposable email address) 
+- [x] verify the DEA (disposable email address)*
 - [x] verify the smtp**
 
+* only if domain is listed [here](https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)
 ** may not work as expected and can often lead to error
 
 ## Example Ouputs
@@ -35,6 +36,45 @@
 ```
 
 - Failure email validation
+
+```
+Enter email address
+pree@dkhdsvh.
+INFO : Here is the email address entered : pree@dkhdsvh.
+ERROR : Invalid email :  pree@dkhdsvh.
+```
+
+---
+
+```
++------------------------------------------------------------------------------------+
+| Email Verifier : pree@zzzz1717.com                                                 |
++---+----------------------+---------+-----------------------------------------------+
+| # | VALIDATION TYPE      | RESULT  | RESULT DESCRIPTION                            |
++---+----------------------+---------+-----------------------------------------------+
+| 1 | Valid Email          | SUCCESS |                                               |
+| 2 | DNS TXT Records      | SUCCESS | v=spf1 a mx include:spf.forwardemail.net -all |
+| 3 | MX TXT Records       | SUCCESS | [0xc000008180 0xc0000081e0]                   |
+| 4 | Non Disposable Email | ERROR   | email is disposable                           |
++---+----------------------+---------+-----------------------------------------------+
+```
+
+---
+
+```
++------------------------------------------------------------------------------------------------+
+| Email Verifier : pree@aslkhvfsihvrsh                                                           |
++---+----------------------+---------+-----------------------------------------------------------+
+| # | VALIDATION TYPE      | RESULT  | RESULT DESCRIPTION                                        |
++---+----------------------+---------+-----------------------------------------------------------+
+| 1 | Valid Email          | ERROR   | mail: no angle-addr                                       |
+| 2 | DNS TXT Records      | ERROR   | lookup aslkhvfsihvrsh: dnsquery: DNS name does not exist. |
+| 3 | MX TXT Records       | ERROR   | lookup aslkhvfsihvrsh: dnsquery: DNS name does not exist. |
+| 4 | Non Disposable Email | SUCCESS | email is NOT disposable                                   |
++---+----------------------+---------+-----------------------------------------------------------+
+```
+
+---
 
 ```
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
