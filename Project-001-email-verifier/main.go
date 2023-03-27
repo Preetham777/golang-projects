@@ -113,14 +113,14 @@ func verifySMTPConnectivity(ipMail *string) {
 	newSmptConn, err := net.Dial("tcp", domainName+":"+smtpPort)
 
 	if isError("dialing tcp to domain", err) {
-		//tableRows = append(tableRows, table.Row{5, "SMTP Verification", "ERROR", err})
+		tableRows = append(tableRows, table.Row{5, "SMTP Verification", "ERROR", err})
 		return
 	}
 
 	newSmtpClient, err := smtp.NewClient(newSmptConn, emailHostName)
 
 	if isError("creating new SMTP client", err) {
-		//tableRows = append(tableRows, table.Row{5, "SMTP Verification", "ERROR", err})
+		tableRows = append(tableRows, table.Row{5, "SMTP Verification", "ERROR", err})
 		return
 	}
 
