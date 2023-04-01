@@ -1,21 +1,18 @@
 package main
 
 /*
+   .-----------------------.
+   |C>_ Author: Preetham G |
+   |                       |
+ __|_______________________|__
+|  __________________________--|
+`-/.::::::::::::::::::::::::.\-'a
+ `----------------------------'
 
-This is a simple TODO application
-
-Goal is to have the following functionality along with rest api support
-
-- GET single todo
-- GET all todo
-- CREATE single todo
-- CREATE multple todo
-- Update single todo to done-un-done
-- Update all todo to done/un-done
-- DELETE single todo
-- DELETE all todo
 */
+
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -25,13 +22,8 @@ import (
 /*
 +---------------------------------------------------------+
 | todo is a struct type                                   |
-|                                                         |
-| !!! NOTE !!!!                                           |
-| variables name inside struct has to start with caps     |
-| else it wont be accessible outside.                     |
-| I was getting empty constantly in the                   |
-| c.IndentedJSON(http.StatusOK, completeTodo)             |
-| Ref : https://stackoverflow.com/a/59509628/6222977      |
+| Which holds Id, name and done                           |
+| Make sure the beginning letter to be Capitalized        |
 +---------------------------------------------------------+
 */
 
@@ -40,6 +32,8 @@ type todo struct {
 	Name string `json:"name"`
 	Done bool   `json:"done"`
 }
+
+// Default 2 todo are added
 
 var completeTodo = []todo{
 	{1, "a1", false},
@@ -110,14 +104,92 @@ func deleteTodo(c *gin.Context) {
 ********************************************************************
  */
 
+/*
+***********************************************************************
+*  ██████╗██████╗ ███████╗ █████╗ ████████╗███████╗                   *
+* ██╔════╝██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██╔════╝                   *
+* ██║     ██████╔╝█████╗  ███████║   ██║   █████╗                     *
+* ██║     ██╔══██╗██╔══╝  ██╔══██║   ██║   ██╔══╝                     *
+* ╚██████╗██║  ██║███████╗██║  ██║   ██║   ███████╗                   *
+*  ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝                   *
+***********************************************************************
+ */
+
+func createTodo(c *gin.Context) {
+	var newTodo []todo
+
+	if err := c.ShouldBindJSON(&newTodo); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, "Unable to create new todo")
+		return
+	}
+
+	var allTodoNamesCreate string
+
+	for _, ntd := range newTodo {
+		completeTodo = append(completeTodo, ntd)
+		allTodoNamesCreate = allTodoNamesCreate + " " + ntd.Name
+		fmt.Printf("New todo to create %v\n", ntd)
+	}
+
+	c.IndentedJSON(http.StatusNotFound, "Todo "+allTodoNamesCreate+" created ")
+
+}
+
+/*
+***********************************************************************
+* ██╗   ██╗██████╗ ██████╗  █████╗ ████████╗███████╗                  *
+* ██║   ██║██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔════╝                  *
+* ██║   ██║██████╔╝██║  ██║███████║   ██║   █████╗                    *
+* ██║   ██║██╔═══╝ ██║  ██║██╔══██║   ██║   ██╔══╝                    *
+* ╚██████╔╝██║     ██████╔╝██║  ██║   ██║   ███████╗                  *
+*  ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝                  *
+***********************************************************************
+ */
+
+func updateTodo(c *gin.Context) {
+	var updateTodo todo
+
+	todoId, err := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, "Unable to update")
+		return
+	}
+
+	if err := c.ShouldBindJSON(&updateTodo); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, err)
+		return
+	}
+
+	for i, td := range completeTodo {
+		if td.Id == todoId {
+			completeTodo[i] = updateTodo
+			c.IndentedJSON(http.StatusOK, "Updated todo "+updateTodo.Name)
+			return
+		}
+	}
+
+	c.IndentedJSON(http.StatusBadRequest, "Unable to update todo "+updateTodo.Name)
+
+}
+
 func main() {
 
 	r := gin.New()
+
+	// Get todo(s)
 	r.GET("/todo", getTodoAll)
 	r.GET("/todo/:id", getTodo)
 
+	// Delete todo(s)
 	r.DELETE("/todo", deleteTodoAll)
 	r.DELETE("/todo/:id", deleteTodo)
+
+	// Create todo(s)
+	r.POST("/todo", createTodo)
+
+	// Update todo
+	r.PUT("/todo/:id", updateTodo)
 
 	r.Run(":8086")
 
