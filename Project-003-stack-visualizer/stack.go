@@ -139,6 +139,7 @@ func printStack() {
 
 func main() {
 
+	// Initialize the top to -1
 	newStack.top = -1
 
 REPL:
