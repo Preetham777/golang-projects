@@ -155,7 +155,7 @@ Queue is full !!!
 
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
-Popping the start
+Popping the Top
 
 
    ⇓
@@ -166,7 +166,7 @@ Popping the start
 
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
-Popping the start
+Popping the Top
 
 
    ⇓
@@ -177,7 +177,7 @@ Popping the start
 
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
-Popping the start
+Popping the Top
 
 
    ⇓
@@ -188,7 +188,7 @@ Popping the start
 
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
-Popping the start
+Popping the Top
 
 
    ⇓
@@ -199,7 +199,7 @@ Popping the start
 
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
-Popping the start
+Popping the Top
 
 
    ⇓
@@ -210,7 +210,7 @@ Popping the start
 
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
-Popping the start
+Popping the Top
 
    ⇓
 ╔═════╗╔═════╗╔═════╗╔═════╗
@@ -220,7 +220,7 @@ Popping the start
 
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
-Popping the start
+Popping the Top
 
 
    ⇓
@@ -231,7 +231,7 @@ Popping the start
 
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
-Popping the start
+Popping the Top
 
 
    ⇓
@@ -242,7 +242,7 @@ Popping the start
 
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
-Popping the start
+Popping the Top
 
 
    ⇓
@@ -253,7 +253,7 @@ Popping the start
 
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
-Popping the start
+Popping the Top
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
 2
 Queue is empty !!!

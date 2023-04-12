@@ -28,9 +28,9 @@ const (
 
 	bottomBrick = "╚═════╝"
 
-	ceilingBrickWithStartSymbol = "   ⇓\n╔═════╗"
+	ceilingBrickWithEndSymbol = "   ⇓\n╔═════╗"
 
-	bottomBrickWithEndSymbol = "╚═════╝ ⇖ FI"
+	bottomBrickWithStartSymbol = "╚═════╝ ⇖ FI"
 )
 
 /*
@@ -85,7 +85,7 @@ func pushToQueue() {
 func popFromQueue() {
 
 	if !isQueueEmpty() {
-		fmt.Printf("Popping the start\n")
+		fmt.Printf("Popping the Top\n")
 
 		newQ.arr = newQ.arr[1:]
 		newQ.start -= 1
@@ -128,7 +128,7 @@ func printQueue() {
 
 	if !isQueueEmpty() {
 
-		ceilingBricks += ceilingBrickWithStartSymbol
+		ceilingBricks += ceilingBrickWithEndSymbol
 		ceilingBricks += strings.Repeat(ceilingBrick, len(newQ.arr)-1)
 
 		for i := newQ.start; i >= 0; i-- {
@@ -144,7 +144,7 @@ func printQueue() {
 		}
 
 		bottomBricks += strings.Repeat(bottomBrick, len(newQ.arr)-1)
-		bottomBricks += bottomBrickWithEndSymbol
+		bottomBricks += bottomBrickWithStartSymbol
 
 		fmt.Printf("\n\n%v\n%v\n%v\n\n\n", ceilingBricks, queueUnicode, bottomBricks)
 
