@@ -15,7 +15,7 @@ A simple queue program along with unicode lines to visualize the queue.
 
 ## Results
 
-- PUSH
+### PUSH
 
 ```
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit 
@@ -144,7 +144,7 @@ Queue is full !!!
 ```
 
 
-- POP
+### POP
 
 ```
    ⇓
@@ -260,7 +260,7 @@ Queue is empty !!!
 ```
 
 
-- Print
+### Print
 
 ```
 Enter the operation number: 1.Push       2.Pop   3.Print Stack    4.Exit
